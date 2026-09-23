@@ -1,4 +1,17 @@
 const loadingScreen = document.querySelector('.loading-screen');
+const introVideo = document.querySelector('.intro-video');
+const soundToggle = document.querySelector('.sound-toggle');
+soundToggle?.addEventListener('click', async () => {
+  if (!introVideo) return;
+  introVideo.muted = false;
+  try {
+    await introVideo.play();
+    soundToggle.textContent = 'Sonido activado';
+    soundToggle.classList.add('is-enabled');
+  } catch {
+    soundToggle.textContent = 'Pulsa para activar sonido';
+  }
+});
 window.setTimeout(() => {
   loadingScreen?.classList.add('is-hidden');
   document.body.classList.remove('is-loading');
