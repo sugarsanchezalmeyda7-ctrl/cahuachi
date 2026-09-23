@@ -21,6 +21,19 @@ navigation?.querySelectorAll('a').forEach((link) => link.addEventListener('click
   navigation.classList.remove('mobile-open');
 }));
 
+const visitorCount = document.querySelector('#visitor-count');
+if (visitorCount) {
+  try {
+    const storageKey = 'cahuachi-visitor-count';
+    const storedVisits = Number.parseInt(localStorage.getItem(storageKey) || '0', 10);
+    const visits = Number.isFinite(storedVisits) ? storedVisits + 1 : 1;
+    localStorage.setItem(storageKey, String(visits));
+    visitorCount.textContent = visits.toLocaleString('es-PE');
+  } catch {
+    visitorCount.textContent = '1';
+  }
+}
+
 const floatingSurvey = document.querySelector('.floating-survey');
 let surveyDrag = null;
 let suppressSurveyClick = false;
