@@ -3,7 +3,7 @@ window.setTimeout(() => {
   loadingScreen?.classList.add('is-hidden');
   document.body.classList.remove('is-loading');
   loadingScreen?.addEventListener('transitionend', () => loadingScreen.remove(), { once: true });
-}, 8000);
+}, 10000);
 
 const revealItems = document.querySelectorAll('.reveal');
 const observer = new IntersectionObserver((entries) => {
