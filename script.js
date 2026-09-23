@@ -21,3 +21,54 @@ navigation?.querySelectorAll('a').forEach((link) => link.addEventListener('click
   navigation.classList.remove('mobile-open');
 }));
 
+const floatingSurvey = document.querySelector('.floating-survey');
+let surveyDrag = null;
+let suppressSurveyClick = false;
+
+floatingSurvey?.addEventListener('pointerdown', (event) => {
+  if (event.button !== undefined && event.button !== 0) return;
+
+  const bounds = floatingSurvey.getBoundingClientRect();
+  surveyDrag = {
+    pointerId: event.pointerId,
+    startX: event.clientX,
+    startY: event.clientY,
+    offsetX: event.clientX - bounds.left,
+    offsetY: event.clientY - bounds.top,
+    moved: false,
+  };
+  floatingSurvey.setPointerCapture(event.pointerId);
+  floatingSurvey.classList.add('is-dragging');
+});
+
+floatingSurvey?.addEventListener('pointermove', (event) => {
+  if (!surveyDrag || event.pointerId !== surveyDrag.pointerId) return;
+
+  const distance = Math.hypot(event.clientX - surveyDrag.startX, event.clientY - surveyDrag.startY);
+  if (distance > 5) surveyDrag.moved = true;
+  if (!surveyDrag.moved) return;
+
+  const bounds = floatingSurvey.getBoundingClientRect();
+  const left = Math.min(Math.max(0, event.clientX - surveyDrag.offsetX), window.innerWidth - bounds.width);
+  const top = Math.min(Math.max(0, event.clientY - surveyDrag.offsetY), window.innerHeight - bounds.height);
+  floatingSurvey.style.left = `${left}px`;
+  floatingSurvey.style.top = `${top}px`;
+  floatingSurvey.style.right = 'auto';
+});
+
+const finishSurveyDrag = (event) => {
+  if (!surveyDrag || event.pointerId !== surveyDrag.pointerId) return;
+  suppressSurveyClick = surveyDrag.moved;
+  floatingSurvey.classList.remove('is-dragging');
+  floatingSurvey.releasePointerCapture(event.pointerId);
+  surveyDrag = null;
+};
+
+floatingSurvey?.addEventListener('pointerup', finishSurveyDrag);
+floatingSurvey?.addEventListener('pointercancel', finishSurveyDrag);
+floatingSurvey?.addEventListener('click', (event) => {
+  if (!suppressSurveyClick) return;
+  event.preventDefault();
+  suppressSurveyClick = false;
+});
+
