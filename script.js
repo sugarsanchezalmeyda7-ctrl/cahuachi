@@ -49,8 +49,8 @@ floatingSurvey?.addEventListener('pointermove', (event) => {
   if (!surveyDrag.moved) return;
 
   const bounds = floatingSurvey.getBoundingClientRect();
-  const left = Math.min(Math.max(0, event.clientX - surveyDrag.offsetX), window.innerWidth - bounds.width);
-  const top = Math.min(Math.max(0, event.clientY - surveyDrag.offsetY), window.innerHeight - bounds.height);
+  const left = Math.min(Math.max(0, event.clientX - surveyDrag.offsetX), window.innerWidth - bounds.width) + window.scrollX;
+  const top = Math.min(Math.max(0, event.clientY - surveyDrag.offsetY), window.innerHeight - bounds.height) + window.scrollY;
   floatingSurvey.style.left = `${left}px`;
   floatingSurvey.style.top = `${top}px`;
   floatingSurvey.style.right = 'auto';
